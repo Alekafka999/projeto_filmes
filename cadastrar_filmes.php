@@ -13,6 +13,24 @@ try {
     
 }
 
+//cadastro de filmes
+// se existir um post com o valor cadastrar, executa o código abaixo
+if(isset($_POST['cadastrar'])){
+    $nome = $_POST['nome'];
+    $nome = $_POST['diretor'];
+    $nome = $_POST['categoria'];
+    $nome = $_POST['ano'];
+    $nome = $_POST['duracao'];
+
+    sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao)VALUES('$nome','$diretor','$categoria','$ano','$duracao')";
+
+    $comando = $conexão->prepare($sql);
+    $comando->execute();
+    header("Location: cadastrar_filmes.php");
+
+}
+
+
 
 ?>
 
@@ -32,7 +50,7 @@ try {
         <label for="nome">Nome</label>
         <input type="text" name="nome" id="nome" required>
 
-        <label for="diretor">Nome</label>
+        <label for="diretor">Diretor</label>
         <input type="text" name="diretor" id="diretor" required>
 
         <label for="">Categoria</label>
