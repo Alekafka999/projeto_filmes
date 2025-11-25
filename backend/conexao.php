@@ -1,27 +1,20 @@
 <?php
 
-//Arquivo de conexão com o banco de dado
-try {
-  // tenta realizar a conexão com o banco de dados
-  define("SERVIDOR", "localhost"); 
-  define("USUARIO", "root"); 
-  define("SENHA", "");
-  define("DATABASE", "db_filmes");   
 
-// exemplo para exibir texto + variavel/constante (concatenação)
-// echo "Olá, ". USUARIO ."! Tudo bem?";
+try{
 
-$conexao = new PDO("mysql:host=".SERVIDOR.";dbname=".DATABASE. "; charset=UTF8mb4", USUARIO, SENHA);
-$conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //setar os atributos da conexão
+define("SERVIDOR","localhost");
+define("USUARIO","root");
+define("SENHA","");
+define("BANCO","db_filmes");
 
-  echo "Conectado com sucesso!";
+$conexao = new PDO("mysql:host=".SERVIDOR.";dbname=".BANCO.";charset-utf8mb4",USUARIO,SENHA);
 
-  } catch (PDOException $err) {
-    //tratamento de erro
-    echo "Erro: Conexão com o banco de dados não foi realizada com sucesso. Erro gerado " . $err->getMessage();
+$conexao->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
+}catch(PDOException $err){
 
+    echo "Não foi possível conectar:" . $err->getMessage();
 }
-
 
 ?>
