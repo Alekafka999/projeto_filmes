@@ -6,6 +6,8 @@ try {
     $comando = $conexao->prepare($sql);
     $comando->execute();
     $categorias=$comando->fetchAll(PDO::FETCH_ASSOC);
+    $filmes = json_decode(file_get_contents('banco/filmes.json'), true);
+
 
 
 } catch (PDOException $err) {

@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "categoria": "Ação",
+        "ativo": 1,
+        "data_cadastro": "2025-11-26 14:00:00"
+    }
+]
+$categorias = json_decode(file_get_contents('banco/categorias.json'), true);
+
+$novo = [
+    "id" => count($categorias) + 1,
+    "categoria" => $_POST['categoria'],
+    "ativo" => 1,
+    "data_cadastro" => date('Y-m-d H:i:s')
+];
+
+$categorias[] = $novo;
+
+file_put_contents('banco/categorias.json', json_encode($categorias, JSON_PRETTY_PRINT));
