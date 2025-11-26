@@ -16,22 +16,34 @@ try {
 //cadastro de filmes
 // se existir um post com o valor cadastrar, executa o código abaixo
 if(isset($_POST['cadastrar'])){
+    try{
     $nome = $_POST['nome'];
-    $nome = $_POST['diretor'];
-    $nome = $_POST['categoria'];
-    $nome = $_POST['ano'];
-    $nome = $_POST['duracao'];
+    $diretor = $_POST['diretor'];
+    $categoria = $_POST['categoria'];
+    $ano = $_POST['ano'];
+    $duracao = $_POST['duracao'];
 
-    sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao)VALUES('$nome','$diretor','$categoria','$ano','$duracao')";
+    $sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao)VALUES('$nome','$diretor','$categoria','$ano','$duracao')";
 
-    $comando = $conexão->prepare($sql);
+    $comando = $conexao->prepare($sql);
     $comando->execute();
     header("Location: cadastrar_filmes.php");
 
+} catch (PDOException $err) {
+    echo "Erro ao cadastrar: ".$err->getMessage();
+}
 }
 
+// listagem de filmes
+try{
+    $sql = "SELECT * FROM tb_filmes";
+    $comando = $conexao->prepare($sql);
+    $comando ->execute();
+    $filmes=$comando->fetchAll(PDO::FETCH_ASSOC);
 
-
+}catch(PDOException $err) {
+    echo "Erro ao buscar os dados:".$err->getMessage();
+}
 ?>
 
 
@@ -72,6 +84,37 @@ if(isset($_POST['cadastrar'])){
 
         <input type="submit" name="cadastrar" value="Cadastrar">
     </form>
+
+    <section id="listagem">
+        <h2>Filmes - Relatórios</h2>
+    
+        <table border = 1>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Diretor</th>
+                <th>Categoria</th>
+                <th>Ano</th>
+                <th>Duração</th>
+                <th>Data Cadastro</th>
+            </tr>
+            <?php 
+            foreach($filmes as $filme):
+            ?>
+            <tr>
+                <td><?php echo $filme['id'];?></td>
+                <td><?php echo $filme['nome'];?></td>
+                <td><?php echo $filme['diretor'];?></td>
+                <td><?php echo $filme['id_categoria'];?></td>
+                <td><?php echo $filme['ano'];?></td>
+                <td><?php echo $filme['duracao'];?></td>
+                <td><?php echo $filme['data_cadastro'];?></td>
+            </tr>
+            <?php
+            endforeach;
+            ?>
+        </table>
+    </section>
     
 </body>
 </html>
