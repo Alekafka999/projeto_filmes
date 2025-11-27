@@ -25,7 +25,21 @@ if(isset($_POST['cadastrar'])){
     $ano = $_POST['ano'];
     $duracao = $_POST['duracao'];
 
-    $sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao)VALUES('$nome','$diretor','$categoria','$ano','$duracao')";
+    $pasta = 'uploads';
+    $extensao = strtolower(pathinfo($FILES['imagem']['name'], PATHINFO_EXTENSION));
+
+    if($extensao != 'jpg' || extensao != 'png'){
+    echo "Formato da imagem inválido! .jpg ou .png";
+    exit;
+    }
+
+    $imagem_upload = $hash_imagem.'.'.$extensao;
+
+    $hash_imagem = md5(uniqid($_FILES['imagem']['tmp_name'], true));
+
+    exit;
+
+    $sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao,imagem)VALUES('$nome','$diretor','$categoria','$ano','$duracao', '$imagem_upload')";
 
     $comando = $conexao->prepare($sql);
     $comando->execute();
@@ -34,7 +48,7 @@ if(isset($_POST['cadastrar'])){
 } catch (PDOException $err) {
     echo "Erro ao cadastrar: ".$err->getMessage();
 }
-}
+
 
 // listagem de filmes
 try{
@@ -83,6 +97,7 @@ try{
 
         <label for="duracao">Duração (minutos)</label>
         <input type="number" name="duracao" id="duracao" required>
+        <input type="file"
 
         <input type="submit" name="cadastrar" value="Cadastrar">
     </form>
