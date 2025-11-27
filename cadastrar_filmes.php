@@ -55,15 +55,27 @@ try{
     $sql = "SELECT * FROM tb_filmes";
     $comando = $conexao->prepare($sql);
     $comando ->execute();
-    $filmes=$comando->fetchAll(PDO::FETCH_ASSOC);
+    $comando->
 
 }catch(PDOException $err) {
     echo "Erro ao buscar os dados:".$err->getMessage();
 }
+
+// deletar o registro
+if(isset($_POST['deletar'])){
+    
+        try{
+            $id = $_POST['deletar'];
+            $sql = 'DELETE FROM tb_filmes WHERE id=$id';
+            $conexao = $conexao->prepare($sql);
+            $comando->execure();
+            header('Location:cadastrar_filmes.php');
+
+        } catch (PDOException $err) {
+            echo "Erro ao deletar: ".$err->getMessage();
+
+}
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -127,6 +139,16 @@ try{
                 <td><?php echo $filme['duracao'];?></td>
                 <td><?php echo $filme['data_cadastro'];?></td>
             </tr>
+
+            <td>
+                <form action="" method="post">
+                    <input type="hidden" name="deletar" id="deletar" value="<?php echo $filme['id'];?>">
+                    <button type="submit">
+                        <i class="fa-solid fa-trash-can">
+                    </i>
+                    </button>
+                </form>
+            </td>
             <?php
             endforeach;
             ?>
