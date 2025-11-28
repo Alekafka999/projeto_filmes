@@ -6,40 +6,63 @@ try {
     $comando = $conexao->prepare($sql);
     $comando->execute();
     $categorias=$comando->fetchAll(PDO::FETCH_ASSOC);
-    $filmes = json_decode(file_get_contents('banco/filmes.json'), true);
-
-
 
 } catch (PDOException $err) {
     echo "Erro ao cadastrar".$err->getMessage();
     
 }
 
+// listagem de filmes
+try {
+    $sql = "SELECT * from tb_filmes";
+    $comando = $conexao->prepare(query: $sql);
+    $comando->execute();
+    $filmes = $comando->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $err) {
+    echo "Ero ao buscar os dados; " .$err->getMessage();
+}
+
+    
+    
+    
 //cadastro de filmes
 // se existir um post com o valor cadastrar, executa o código abaixo
 if(isset($_POST['cadastrar'])){
-    try{
+
+// captura os valores enviados via POST
+try {
     $nome = $_POST['nome'];
     $diretor = $_POST['diretor'];
     $categoria = $_POST['categoria'];
     $ano = $_POST['ano'];
     $duracao = $_POST['duracao'];
 
+//upload da imagem
+//define a pasta onde irá fazer o upload da imagem
     $pasta = 'uploads';
-    $extensao = strtolower(pathinfo($FILES['imagem']['name'], PATHINFO_EXTENSION));
 
-    if($extensao != 'jpg' || extensao != 'png'){
-    echo "Formato da imagem inválido! .jpg ou .png";
+//captura a extensão do arquivo (.png, . jpg)
+
+$extensao = strtolower(pathinfo($FILES['imagem']['name'], PATHINFO_EXTENSION));
+
+//valida a extensão do arquivo
+
+if($extensao != 'jpg' && extensao != 'png'){
+    echo "Formato da imagem inválido! Use JPG ou PNG";
     exit;
-    }
+}
 
-    $imagem_upload = $hash_imagem.'.'.$extensao;
+//gera um hash para imagem (nome aleatório)
+$hash_imagem = md5(string: uniqid(prefi: $_FILES['imagem'], more_entropy: true));
 
-    $hash_imagem = md5(uniqid($_FILES['imagem']['tmp_name'], true));
+// cria o novo nome da imagem, com o hash e extensão
+$imagem_upload = $hash_imagem.'.'.$extensao;
 
-    exit;
+//realiza o upload
+move_uploaded_file(from: $_FILES['imagem']['tmp_name'], to: 'uploads/'.$imagem_upload);
 
-    $sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao,imagem)VALUES('$nome','$diretor','$categoria','$ano','$duracao', '$imagem_upload')";
+
+$sql = "INSERT INTO tb_filmes(nome,diretor,ide_categoria,ano,duracao,imagem)VALUES('$nome','$diretor','$categoria','$ano','$duracao', '$imagem_upload')";
 
     $comando = $conexao->prepare($sql);
     $comando->execute();
@@ -49,31 +72,18 @@ if(isset($_POST['cadastrar'])){
     echo "Erro ao cadastrar: ".$err->getMessage();
 }
 
-
-// listagem de filmes
-try{
-    $sql = "SELECT * FROM tb_filmes";
-    $comando = $conexao->prepare($sql);
-    $comando ->execute();
-    $comando->
-
-}catch(PDOException $err) {
-    echo "Erro ao buscar os dados:".$err->getMessage();
-}
-
-// deletar o registro
+//deletar o registro
 if(isset($_POST['deletar'])){
-    
-        try{
-            $id = $_POST['deletar'];
-            $sql = 'DELETE FROM tb_filmes WHERE id=$id';
-            $conexao = $conexao->prepare($sql);
-            $comando->execure();
-            header('Location:cadastrar_filmes.php');
+    try {
+        $nome = $_POST['deletar'];
+        $sql = "DELETE FROM tb_flmes WHERE id=$id";
+        $comando = $conexao->prepare(query: $sql);
+        $comando->execute();
+        header(header: "Localion:cadastrar_filmes.php");
 
-        } catch (PDOException $err) {
-            echo "Erro ao deletar: ".$err->getMessage();
-
+    } catch (PDOException $err) {
+        echo "Erro ao deletar: ".$err->getMessage();
+    }
 }
 ?>
 
@@ -83,6 +93,7 @@ if(isset($_POST['deletar'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Filmes - Cadastro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <h1>Cadastro de filmes</h1>
